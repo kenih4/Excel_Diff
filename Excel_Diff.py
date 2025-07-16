@@ -3,11 +3,18 @@ from openpyxl import Workbook
 import win32com.client                                          #Win32comモジュールを呼び出す
 import time
 
+# Usage:
+# python Excel_Diff.py
+#
 # ファイルパス（自分のファイルに書き換えてください）
-file1 = 'C:\\Users\\kenic\\OneDrive\\Desktop\\集計のBK\\25-3完\\SACLA運転状況集計まとめ_石.xlsm'
-file2 = 'C:\\Users\\kenic\\OneDrive\\Desktop\\集計のBK\\25-3町田さん作成\\SACLA運転状況集計まとめ.xlsm'
+#file1 = 'C:\\Users\\kenic\\Dropbox\\gitdir\\VBA運転集計用\\要調査Jupyterで出力したのと自分のPythonで出力したので異なる\\計画時間my.xlsx'
+#file2 = 'C:\\Users\\kenic\\Dropbox\\gitdir\\VBA運転集計用\\要調査Jupyterで出力したのと自分のPythonで出力したので異なる\\計画時間byJupyter.xlsx'
+#file2 = 'C:\\Users\\kenic\\OneDrive\\Desktop\\集計のBK\\25-6作成前\\SACLA運転状況集計まとめ.xlsm'
+#file2 = 'C:\\Users\\kenic\\OneDrive\\Desktop\\集計のBK\\25-3町田さん作成\\SACLA運転状況集計まとめ.xlsm'
+file1 = 'C:\\Users\\kenic\\OneDrive\\Desktop\\集計のBK\\25-6完\\SACLA運転状況集計まとめ.xlsm'
+file2 = '\\\\saclaopr18.spring8.or.jp\\common\\運転状況集計\\最新\\SACLA\\SACLA運転状況集計まとめ.xlsm'
 sheet_name = 'Fault集計'
-
+#sheet_name = 'まとめ '
 
 # Excel読み込み
 df1 = pd.read_excel(file1, sheet_name=sheet_name, header=None)
@@ -35,13 +42,13 @@ for row in range(max_rows):
 if diffs:
     diff_df = pd.DataFrame(diffs, columns=["シート名", "セル", "ファイル1の値", "ファイル2の値"])
     diff_df.to_excel("差分リスト.xlsx", index=False)
-    print("差分リスト.xlsx を出力しました！")
+    print("差分が見つかってしまいました。\n差分リスト.xlsx を出力しました！")
     
     try:
         excelapp = win32com.client.Dispatch('Excel.Application')        #Excelアプリケーションを起動する
         excelapp.Visible = 1                                            #Excelウインドウを表示する
         wb = excelapp.Workbooks.Open("C:\\Users\\kenic\\Dropbox\\gitdir\\Excel_Diff\\差分リスト.xlsx",ReadOnly=False)
-        input("Excelが開かれました。Enterを押すと終了します。")
+        input("Excelが開かれました。\nEnterを押すと終了します。")
         wb.Close(SaveChanges=False)
         excelapp.Quit()
     except Exception as e:
@@ -52,4 +59,3 @@ if diffs:
     
 else:
     print("差分は見つかりませんでした。")
-input("Enterを押すと終了します...")
